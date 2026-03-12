@@ -1,6 +1,7 @@
 import os
 import asyncio
 import aiosqlite
+from urllib.parse import quote
 from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher, F, Router
 from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
@@ -8,7 +9,6 @@ from aiogram.filters import CommandStart
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.utils.deep_linking import create_start_link
-from urllib.parse import quote
 
 load_dotenv()
 BOT_TOKEN = os.getenv("BOT_TOKEN")
@@ -24,9 +24,22 @@ TEXT_DIAGNOSTIC = "Здравствуйте! Хочу на бесплатную 
 
 URL_INTENSIVE = f"https://t.me/mariaborodylina?text={quote(TEXT_INTENSIVE)}"
 URL_DIAGNOSTIC = f"https://t.me/mariaborodylina?text={quote(TEXT_DIAGNOSTIC)}"
-# --- Тексты результатов ---
+
+# --- Тексты ---
+INTRO_TEXT = (
+    "Мы привыкли измерять себя линейкой успеха: зарплата, должность, количество лайков, идеальный порядок дома.\n\n"
+    "Это внешняя сторона — самооценка. Но есть то, что скрыто под водой — наша самоценность. "
+    "Это фундаментальное ощущение «со мной всё ок», даже если я сегодня ошиблась, провалила проект или просто лежу на диване.\n\n"
+    "Если самоценность низкая, мы попадаем в ловушки отношений: терпим обесценивание, бегаем за недоступными партнерами, пытаемся заслужить любовь у мужчины, начальства, клиентов, друзей, общества.\n\n"
+    "Этот тест поможет вам заглянуть вглубь себя.\n\n"
+    "**Инструкция:** Отвечайте максимально честно, выбирая тот вариант, который ПЕРВЫЙ приходит в голову, а не тот, который звучит «правильно».\n\n"
+    "Готовы начать?"
+)
+
 RESULT_50_60 = (
-    "**50 – 60 баллов. Высокая самоценность. «Я у себя есть».**\n\n"
+    "**50 – 60 баллов.**\n"
+    "**Высокая самоценность.**\n"
+    "**«Я у себя есть».**\n\n"
     "Поздравляю! Вы обладаете тем самым внутренним стержнем. Вы не рухнете, если вас не похвалят, и не рассыпетесь от критики. Вы умеете быть опорой самой себе. В отношениях вы выбираете партнера, а не боретесь за него. Вы четко чувствуете свои границы.\n\n"
     "Но даже здесь есть нюанс: Проверьте, не закрылись ли вы в «броне» самодостаточности, чтобы не чувствовать боль? Иногда высокая самоценность — это маска, за которой прячется усталость быть «сильной».\n\n"
     "И об этой усталости громче всего говорит наше тело. Хроническое напряжение в спине и шее, будто вы несете невидимый груз; тяжесть в плечах; «деревянная» осанка; частые головные боли, боли в спине или ощущение комка в горле, сдавленности в груди — всё это сигналы того, что внутри копятся подавленные эмоции.\n\n"
@@ -36,7 +49,9 @@ RESULT_50_60 = (
 )
 
 RESULT_36_49 = (
-    "**36 – 49 баллов. Средний/Ситуативный уровень. «Я ок, если...»**\n\n"
+    "**36 – 49 баллов.**\n"
+    "**Средний/Ситуативный уровень.**\n"
+    "**«Я ок, если...»**\n\n"
     "У вас хорошая база, но ваша самоценность часто зависит от внешних факторов: похвалы начальника, настроения партнера, успеха детей. Вы можете быть сильной, но периодически проваливаетесь в состояние «я недостаточно хороша». Это зыбкая почва.\n\n"
     "Именно здесь чаще всего возникают истории про обесценивание (вы можете его притягивать) и желание «спасать» недоступных партнеров. Фундамент есть, но он требует укрепления.\n\n"
     "Если вы узнали себя в этом описании, приглашаю вас на бесплатную диагностическую консультацию. Это не просто разговор по душам. Это глубокая разведка вашего внутреннего ландшафта. За 30–40 минут мы:\n\n"
@@ -47,7 +62,9 @@ RESULT_36_49 = (
 )
 
 RESULT_22_35 = (
-    "**22 – 35 баллов. Низкая самоценность. «Поиск себя через других».**\n\n"
+    "**22 – 35 баллов.**\n"
+    "**Низкая самоценность.**\n"
+    "**«Поиск себя через других».**\n\n"
     "Скорее всего, вам знакомо чувство, что вы «не тянете». Вы очень требовательны к себе, но при этом зависимы от мнения окружающих. В отношениях вы часто оказываетесь в роли «догоняющей» или «спасающей». Вы боитесь быть покинутой, поэтому можете терпеть неуважение или обесценивание.\n\n"
     "Ваш внутренний критик очень силен. Это состояние выматывает и не дает строить счастливые отношения, основанные на равенстве. Вы словно все время ищете подтверждение своей нужности вовне.\n\n"
     "Если вы узнали себя, дело не в том, что с вами «что-то не так». Дело в тех самых глубинных Я-программах, которые были заложены в детстве. Программах «я ценна, только если удобна/успешна/незаметна».\n\n"
@@ -60,7 +77,9 @@ RESULT_22_35 = (
 )
 
 RESULT_15_21 = (
-    "**15 – 21 балл. Критически низкая самоценность. «Я — пустота».**\n\n"
+    "**15 – 21 балл.**\n"
+    "**Критически низкая самоценность.**\n"
+    "**«Я — пустота».**\n\n"
     "Вам сейчас очень больно. Мир кажется опасным, а вы — маленькой и беззащитной перед ним. Вы либо постоянно доказываете всем, что чего-то стоите (сгорая на работе), либо чувствуете себя полностью опустошенной.\n\n"
     "В любви вы либо растворяетесь в партнере без остатка, терпя любое обращение, либо выбираете тех, кто принципиально недоступен, чтобы лишний раз не раниться об реальную близость.\n\n"
     "Если вы узнали себя, дело не в том, что с вами «что-то не так». Дело в тех самых глубинных Я-программах, которые были заложены в детстве. Программах «я ценна, только если удобна/успешна/незаметна».\n\n"
@@ -181,6 +200,25 @@ QUESTIONS = [
     }
 ]
 
+# Фразы-переходы перед вопросами
+TRANSITIONS = [
+    "",  # Для 1-го вопроса пусто
+    "Отлично! Следующий вопрос:",
+    "Идем дальше:",
+    "Продолжаем:",
+    "Хорошо, следующий вопрос:",
+    "Двигаемся дальше:",
+    "Следующий вопрос:",
+    "Экватор пройден! Идем дальше:",
+    "Продолжаем погружение:",
+    "Следующая ситуация:",
+    "Отлично, следующий вопрос:",
+    "Осталось совсем немного:",
+    "Движемся к финалу:",
+    "Еще чуть-чуть...",
+    "Финальный вопрос!"
+]
+
 
 # --- FSM Состояния ---
 class Questionnaire(StatesGroup):
@@ -220,11 +258,17 @@ async def init_db():
 
 
 # --- Клавиатуры ---
+def get_start_kb():
+    return InlineKeyboardMarkup(inline_keyboard=[
+        [InlineKeyboardButton(text="Начать тест", callback_data="start_questionnaire")]
+    ])
+
+
 def get_admin_kb():
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="🔗 Создать ссылку", callback_data="admin_createlink")],
         [InlineKeyboardButton(text="📊 Статистика", callback_data="admin_stats")],
-        [InlineKeyboardButton(text="📝 Протестировать анкету", callback_data="start_questionnaire")]
+        [InlineKeyboardButton(text="📝 Протестировать анкету", callback_data="admin_test_q")]
     ])
 
 
@@ -235,7 +279,6 @@ def get_question_kb(q_index: int):
     return InlineKeyboardMarkup(inline_keyboard=[buttons])
 
 
-# Передаем тип действия: intensive или diagnostic
 def get_signup_kb(action_type: str):
     return InlineKeyboardMarkup(inline_keyboard=[
         [InlineKeyboardButton(text="Записаться", callback_data=f"track_{action_type}")]
@@ -299,6 +342,16 @@ async def admin_stats(callback: CallbackQuery):
     await callback.answer()
 
 
+@router.callback_query(F.data == "admin_test_q", F.from_user.id == ADMIN_ID)
+async def admin_test_questionnaire(callback: CallbackQuery, state: FSMContext):
+    await state.update_data(db_source="admin_test")
+    await callback.message.edit_reply_markup(reply_markup=None)
+    await state.update_data(score=0, q_index=0)
+    await state.set_state(Questionnaire.answering)
+    await send_question(callback.message, 0, is_callback=False)
+    await callback.answer()
+
+
 # --- Пользовательская логика ---
 @router.message(CommandStart())
 async def user_start(message: Message, command: CommandStart, state: FSMContext):
@@ -313,34 +366,37 @@ async def user_start(message: Message, command: CommandStart, state: FSMContext)
                          (message.from_user.id, username, args))
         await db.commit()
 
-    await start_questionnaire_process(message, state, args)
+    await state.update_data(db_source=args)
+    # Отправляем введение с кнопкой
+    await message.answer(INTRO_TEXT, reply_markup=get_start_kb(), parse_mode="Markdown")
 
 
 @router.callback_query(F.data == "start_questionnaire")
-async def admin_test_questionnaire(callback: CallbackQuery, state: FSMContext):
-    await start_questionnaire_process(callback.message, state, "admin_test", is_callback=True)
-    await callback.answer()
+async def start_questionnaire_handler(callback: CallbackQuery, state: FSMContext):
+    # Убираем кнопку "Начать" из введения
+    await callback.message.edit_reply_markup(reply_markup=None)
 
-
-async def start_questionnaire_process(message_obj: Message, state: FSMContext, source: str, is_callback=False):
-    await state.update_data(score=0, q_index=0, db_source=source)
+    await state.update_data(score=0, q_index=0)
     await state.set_state(Questionnaire.answering)
-    await send_question(message_obj, 0, is_callback)
+    # Отправляем 1-й вопрос новым сообщением
+    await send_question(callback.message, 0, is_callback=False)
+    await callback.answer()
 
 
 async def send_question(message_obj: Message, q_index: int, is_callback=False):
     q_data = QUESTIONS[q_index]
+    trans = TRANSITIONS[q_index]
 
-    text = f"**{q_data['text']}**\n\n"
+    prefix = f"_{trans}_\n\n" if trans else ""
+    text = f"{prefix}**{q_data['text']}**\n\n"
+
     for label, opt_text, _ in q_data["opts"]:
         text += f"{label}) {opt_text}\n"
 
     kb = get_question_kb(q_index)
 
-    if is_callback:
-        await message_obj.edit_text(text, reply_markup=kb, parse_mode="Markdown")
-    else:
-        await message_obj.answer(text, reply_markup=kb, parse_mode="Markdown")
+    # Мы всегда отправляем НОВОЕ сообщение с вопросом
+    await message_obj.answer(text, reply_markup=kb, parse_mode="Markdown")
 
 
 # --- Обработка ответов ---
@@ -349,13 +405,37 @@ async def handle_answer(callback: CallbackQuery, state: FSMContext):
     points = int(callback.data.split("_")[1])
     data = await state.get_data()
 
+    curr_index = data['q_index']
     new_score = data['score'] + points
-    next_index = data['q_index'] + 1
+    next_index = curr_index + 1
 
+    # 1. Находим текст ответа, который выбрал пользователь
+    q_data = QUESTIONS[curr_index]
+    chosen_text = ""
+    for label, opt_text, pts in q_data["opts"]:
+        if pts == points:
+            chosen_text = f"{label}) {opt_text}"
+            break
+
+    # 2. Формируем текст для редактирования старого сообщения
+    trans = TRANSITIONS[curr_index]
+    prefix = f"_{trans}_\n\n" if trans else ""
+    old_text = f"{prefix}**{q_data['text']}**\n\n"
+    for label, opt_text, _ in q_data["opts"]:
+        old_text += f"{label}) {opt_text}\n"
+
+    # Дописываем выбор пользователя
+    old_text += f"\n✅ **Ваш выбор:** {chosen_text}"
+
+    # Редактируем старое сообщение (убираем клавиатуру и вставляем выбор)
+    await callback.message.edit_text(old_text, reply_markup=None, parse_mode="Markdown")
+
+    # Обновляем состояние
     await state.update_data(score=new_score, q_index=next_index)
 
+    # 3. Отправляем следующий вопрос или результат
     if next_index < len(QUESTIONS):
-        await send_question(callback.message, next_index, is_callback=True)
+        await send_question(callback.message, next_index, is_callback=False)
     else:
         # Маршрутизация результатов и кнопок
         if 50 <= new_score <= 60:
@@ -371,7 +451,7 @@ async def handle_answer(callback: CallbackQuery, state: FSMContext):
             result_text = RESULT_15_21
             action_type = "diagnostic"
 
-        if data['db_source'] != "admin_test":
+        if data.get('db_source') != "admin_test":
             async with aiosqlite.connect("bot_database.db") as db:
                 await db.execute(
                     "UPDATE stats SET score = ? WHERE user_id = ? AND id = (SELECT MAX(id) FROM stats WHERE user_id = ?)",
@@ -381,8 +461,10 @@ async def handle_answer(callback: CallbackQuery, state: FSMContext):
             username = f"@{callback.from_user.username}" if callback.from_user.username else callback.from_user.first_name
             await bot.send_message(ADMIN_ID, f"✅ Анкета пройдена: {username}\nБаллы: {new_score}")
 
-        await callback.message.edit_text(result_text, reply_markup=get_signup_kb(action_type), parse_mode="Markdown")
+        await callback.message.answer(result_text, reply_markup=get_signup_kb(action_type), parse_mode="Markdown")
         await state.clear()
+
+    await callback.answer()
 
 
 # Перехватываем тип действия из callback_data (track_intensive или track_diagnostic)
