@@ -4,7 +4,7 @@ import aiosqlite
 from urllib.parse import quote
 from dotenv import load_dotenv
 from aiogram import Bot, Dispatcher, F, Router
-from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.types import Message, CallbackQuery, InlineKeyboardMarkup, InlineKeyboardButton, FSInputFile
 from aiogram.filters import CommandStart
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
@@ -462,7 +462,13 @@ async def user_start(message: Message, command: CommandStart, state: FSMContext)
         await db.commit()
 
     await state.update_data(db_source=args)
-    await message.answer(INTRO_TEXT, reply_markup=get_start_kb(), parse_mode="HTML")
+
+    img_path = "images/main.png"
+    if os.path.exists(img_path):
+        await message.answer_photo(FSInputFile(img_path), caption=INTRO_TEXT, reply_markup=get_start_kb(),
+                                   parse_mode="HTML")
+    else:
+        await message.answer(INTRO_TEXT, reply_markup=get_start_kb(), parse_mode="HTML")
 
 
 @router.callback_query(F.data == "start_questionnaire")
@@ -545,22 +551,38 @@ async def handle_answer(callback: CallbackQuery, state: FSMContext):
 # --- Воронка итогов ---
 @router.callback_query(F.data.startswith("res1_"))
 async def show_result_step1(callback: CallbackQuery):
+    # Убираем кнопки у предыдущего сообщения
+    await callback.message.edit_reply_markup(reply_markup=None)
+
     cat = callback.data.split("_")[1]
-    await callback.message.edit_text(TEXTS_P1[cat], reply_markup=get_funnel_step1_kb(cat), parse_mode="HTML")
+    img_map = {"high": "50-60", "mid": "36-49", "low": "22-35", "crit": "15-21"}
+    img_path = f"images/{img_map[cat]}.png"
+
+    # Отправляем новое сообщение (сначала фото, затем текст)
+    if os.path.exists(img_path):
+        await callback.message.answer_photo(FSInputFile(img_path))
+
+    await callback.message.answer(TEXTS_P1[cat], reply_markup=get_funnel_step1_kb(cat), parse_mode="HTML")
     await callback.answer()
 
 
 @router.callback_query(F.data.startswith("res2_"))
 async def show_result_step2(callback: CallbackQuery):
+    await callback.message.edit_reply_markup(reply_markup=None)
     cat = callback.data.split("_")[1]
-    await callback.message.edit_text(TEXTS_P2[cat], reply_markup=get_funnel_step2_kb(cat), parse_mode="HTML")
+
+    # Отправляем новое сообщение
+    await callback.message.answer(TEXTS_P2[cat], reply_markup=get_funnel_step2_kb(cat), parse_mode="HTML")
     await callback.answer()
 
 
 @router.callback_query(F.data.startswith("res3_"))
 async def show_result_step3(callback: CallbackQuery):
+    await callback.message.edit_reply_markup(reply_markup=None)
     cat = callback.data.split("_")[1]
-    await callback.message.edit_text(TEXTS_P3[cat], reply_markup=get_funnel_step3_kb(), parse_mode="HTML")
+
+    # Отправляем новое сообщение
+    await callback.message.answer(TEXTS_P3[cat], reply_markup=get_funnel_step3_kb(), parse_mode="HTML")
     await callback.answer()
 
 
