@@ -32,14 +32,14 @@ INTRO_TEXT = (
     "Это фундаментальное ощущение «со мной всё ок», даже если я сегодня ошиблась, провалила проект или просто лежу на диване.\n\n"
     "Если самоценность низкая, мы попадаем в ловушки отношений: терпим обесценивание, бегаем за недоступными партнерами, пытаемся заслужить любовь у мужчины, начальства, клиентов, друзей, общества.\n\n"
     "Этот тест поможет вам заглянуть вглубь себя.\n\n"
-    "**Инструкция:** Отвечайте максимально честно, выбирая тот вариант, который ПЕРВЫЙ приходит в голову, а не тот, который звучит «правильно».\n\n"
+    "<b>Инструкция:</b> Отвечайте максимально честно, выбирая тот вариант, который ПЕРВЫЙ приходит в голову, а не тот, который звучит «правильно».\n\n"
     "Готовы начать?"
 )
 
 RESULT_50_60 = (
-    "**50 – 60 баллов.**\n"
-    "**Высокая самоценность.**\n"
-    "**«Я у себя есть».**\n\n"
+    "<b>50 – 60 баллов.</b>\n"
+    "<b>Высокая самоценность.</b>\n"
+    "<b>«Я у себя есть».</b>\n\n"
     "Поздравляю! Вы обладаете тем самым внутренним стержнем. Вы не рухнете, если вас не похвалят, и не рассыпетесь от критики. Вы умеете быть опорой самой себе. В отношениях вы выбираете партнера, а не боретесь за него. Вы четко чувствуете свои границы.\n\n"
     "Но даже здесь есть нюанс: Проверьте, не закрылись ли вы в «броне» самодостаточности, чтобы не чувствовать боль? Иногда высокая самоценность — это маска, за которой прячется усталость быть «сильной».\n\n"
     "И об этой усталости громче всего говорит наше тело. Хроническое напряжение в спине и шее, будто вы несете невидимый груз; тяжесть в плечах; «деревянная» осанка; частые головные боли, боли в спине или ощущение комка в горле, сдавленности в груди — всё это сигналы того, что внутри копятся подавленные эмоции.\n\n"
@@ -49,9 +49,9 @@ RESULT_50_60 = (
 )
 
 RESULT_36_49 = (
-    "**36 – 49 баллов.**\n"
-    "**Средний/Ситуативный уровень.**\n"
-    "**«Я ок, если...»**\n\n"
+    "<b>36 – 49 баллов.</b>\n"
+    "<b>Средний/Ситуативный уровень.</b>\n"
+    "<b>«Я ок, если...»</b>\n\n"
     "У вас хорошая база, но ваша самоценность часто зависит от внешних факторов: похвалы начальника, настроения партнера, успеха детей. Вы можете быть сильной, но периодически проваливаетесь в состояние «я недостаточно хороша». Это зыбкая почва.\n\n"
     "Именно здесь чаще всего возникают истории про обесценивание (вы можете его притягивать) и желание «спасать» недоступных партнеров. Фундамент есть, но он требует укрепления.\n\n"
     "Если вы узнали себя в этом описании, приглашаю вас на бесплатную диагностическую консультацию. Это не просто разговор по душам. Это глубокая разведка вашего внутреннего ландшафта. За 30–40 минут мы:\n\n"
@@ -62,9 +62,9 @@ RESULT_36_49 = (
 )
 
 RESULT_22_35 = (
-    "**22 – 35 баллов.**\n"
-    "**Низкая самоценность.**\n"
-    "**«Поиск себя через других».**\n\n"
+    "<b>22 – 35 баллов.</b>\n"
+    "<b>Низкая самоценность.</b>\n"
+    "<b>«Поиск себя через других».</b>\n\n"
     "Скорее всего, вам знакомо чувство, что вы «не тянете». Вы очень требовательны к себе, но при этом зависимы от мнения окружающих. В отношениях вы часто оказываетесь в роли «догоняющей» или «спасающей». Вы боитесь быть покинутой, поэтому можете терпеть неуважение или обесценивание.\n\n"
     "Ваш внутренний критик очень силен. Это состояние выматывает и не дает строить счастливые отношения, основанные на равенстве. Вы словно все время ищете подтверждение своей нужности вовне.\n\n"
     "Если вы узнали себя, дело не в том, что с вами «что-то не так». Дело в тех самых глубинных Я-программах, которые были заложены в детстве. Программах «я ценна, только если удобна/успешна/незаметна».\n\n"
@@ -77,9 +77,9 @@ RESULT_22_35 = (
 )
 
 RESULT_15_21 = (
-    "**15 – 21 балл.**\n"
-    "**Критически низкая самоценность.**\n"
-    "**«Я — пустота».**\n\n"
+    "<b>15 – 21 балл.</b>\n"
+    "<b>Критически низкая самоценность.</b>\n"
+    "<b>«Я — пустота».</b>\n\n"
     "Вам сейчас очень больно. Мир кажется опасным, а вы — маленькой и беззащитной перед ним. Вы либо постоянно доказываете всем, что чего-то стоите (сгорая на работе), либо чувствуете себя полностью опустошенной.\n\n"
     "В любви вы либо растворяетесь в партнере без остатка, терпя любое обращение, либо выбираете тех, кто принципиально недоступен, чтобы лишний раз не раниться об реальную близость.\n\n"
     "Если вы узнали себя, дело не в том, что с вами «что-то не так». Дело в тех самых глубинных Я-программах, которые были заложены в детстве. Программах «я ценна, только если удобна/успешна/незаметна».\n\n"
@@ -160,7 +160,7 @@ QUESTIONS = [
         "text": "10. Если сравнивать вашу жизнь с жизнью подруг/коллег, вы чаще чувствуете:",
         "opts": [("А", "У каждой свой путь, сравнение мне не интересно.", 4),
                  ("Б", "Иногда завидую успехам, но в целом понимаю, что у меня всё хорошо.", 3),
-                 ("В", "Часто ощущаю, что я отстала, у них всё лучше, чем у меня.", 2),
+                 ("В", "Ча часто ощущаю, что я отстала, у них всё лучше, чем у меня.", 2),
                  ("Г", "Зависть, которая потом переходит в самоедство.", 1)]
     },
     {
@@ -310,7 +310,8 @@ async def admin_create_link_start(callback: CallbackQuery, state: FSMContext):
 async def admin_generate_link(message: Message, state: FSMContext):
     link_name = message.text.strip().replace(" ", "_")
     link = await create_start_link(bot, link_name, encode=False)
-    await message.answer(f"✅ Ссылка успешно создана:\n`{link}`", parse_mode="Markdown", reply_markup=get_admin_kb())
+    await message.answer(f"✅ Ссылка успешно создана:\n<code>{link}</code>", parse_mode="HTML",
+                         reply_markup=get_admin_kb())
     await state.clear()
 
 
@@ -331,14 +332,14 @@ async def admin_stats(callback: CallbackQuery):
                               """) as cursor:
             scores = await cursor.fetchone()
 
-    stats_text = "📊 **Статистика:**\n\n**Переходы по ссылкам:**\n"
+    stats_text = "📊 <b>Статистика:</b>\n\n<b>Переходы по ссылкам:</b>\n"
     for src, count in sources:
         stats_text += f"— {src if src else 'organic'}: {count}\n"
 
-    stats_text += f"\n**Нажали 'Записаться':** {clicks[0]}\n"
-    stats_text += f"\n**По категориям:**\n— 50-60 баллов: {scores[0] or 0}\n— 36-49 баллов: {scores[1] or 0}\n— 22-35 баллов: {scores[2] or 0}\n— 15-21 балл: {scores[3] or 0}"
+    stats_text += f"\n<b>Нажали 'Записаться':</b> {clicks[0]}\n"
+    stats_text += f"\n<b>По категориям:</b>\n— 50-60 баллов: {scores[0] or 0}\n— 36-49 баллов: {scores[1] or 0}\n— 22-35 баллов: {scores[2] or 0}\n— 15-21 балл: {scores[3] or 0}"
 
-    await callback.message.edit_text(stats_text, parse_mode="Markdown", reply_markup=get_admin_kb())
+    await callback.message.edit_text(stats_text, parse_mode="HTML", reply_markup=get_admin_kb())
     await callback.answer()
 
 
@@ -368,7 +369,7 @@ async def user_start(message: Message, command: CommandStart, state: FSMContext)
 
     await state.update_data(db_source=args)
     # Отправляем введение с кнопкой
-    await message.answer(INTRO_TEXT, reply_markup=get_start_kb(), parse_mode="Markdown")
+    await message.answer(INTRO_TEXT, reply_markup=get_start_kb(), parse_mode="HTML")
 
 
 @router.callback_query(F.data == "start_questionnaire")
@@ -387,8 +388,8 @@ async def send_question(message_obj: Message, q_index: int, is_callback=False):
     q_data = QUESTIONS[q_index]
     trans = TRANSITIONS[q_index]
 
-    prefix = f"_{trans}_\n\n" if trans else ""
-    text = f"{prefix}**{q_data['text']}**\n\n"
+    prefix = f"<i>{trans}</i>\n\n" if trans else ""
+    text = f"{prefix}<b>{q_data['text']}</b>\n\n"
 
     for label, opt_text, _ in q_data["opts"]:
         text += f"{label}) {opt_text}\n"
@@ -396,7 +397,7 @@ async def send_question(message_obj: Message, q_index: int, is_callback=False):
     kb = get_question_kb(q_index)
 
     # Мы всегда отправляем НОВОЕ сообщение с вопросом
-    await message_obj.answer(text, reply_markup=kb, parse_mode="Markdown")
+    await message_obj.answer(text, reply_markup=kb, parse_mode="HTML")
 
 
 # --- Обработка ответов ---
@@ -419,16 +420,16 @@ async def handle_answer(callback: CallbackQuery, state: FSMContext):
 
     # 2. Формируем текст для редактирования старого сообщения
     trans = TRANSITIONS[curr_index]
-    prefix = f"_{trans}_\n\n" if trans else ""
-    old_text = f"{prefix}**{q_data['text']}**\n\n"
+    prefix = f"<i>{trans}</i>\n\n" if trans else ""
+    old_text = f"{prefix}<b>{q_data['text']}</b>\n\n"
     for label, opt_text, _ in q_data["opts"]:
         old_text += f"{label}) {opt_text}\n"
 
     # Дописываем выбор пользователя
-    old_text += f"\n✅ **Ваш выбор:** {chosen_text}"
+    old_text += f"\n✅ <b>Ваш выбор:</b> {chosen_text}"
 
     # Редактируем старое сообщение (убираем клавиатуру и вставляем выбор)
-    await callback.message.edit_text(old_text, reply_markup=None, parse_mode="Markdown")
+    await callback.message.edit_text(old_text, reply_markup=None, parse_mode="HTML")
 
     # Обновляем состояние
     await state.update_data(score=new_score, q_index=next_index)
@@ -461,7 +462,7 @@ async def handle_answer(callback: CallbackQuery, state: FSMContext):
             username = f"@{callback.from_user.username}" if callback.from_user.username else callback.from_user.first_name
             await bot.send_message(ADMIN_ID, f"✅ Анкета пройдена: {username}\nБаллы: {new_score}")
 
-        await callback.message.answer(result_text, reply_markup=get_signup_kb(action_type), parse_mode="Markdown")
+        await callback.message.answer(result_text, reply_markup=get_signup_kb(action_type), parse_mode="HTML")
         await state.clear()
 
     await callback.answer()
