@@ -160,7 +160,7 @@ QUESTIONS = [
         "text": "10. Если сравнивать вашу жизнь с жизнью подруг/коллег, вы чаще чувствуете:",
         "opts": [("А", "У каждой свой путь, сравнение мне не интересно.", 4),
                  ("Б", "Иногда завидую успехам, но в целом понимаю, что у меня всё хорошо.", 3),
-                 ("В", "Ча часто ощущаю, что я отстала, у них всё лучше, чем у меня.", 2),
+                 ("В", "Часто ощущаю, что я отстала, у них всё лучше, чем у меня.", 2),
                  ("Г", "Зависть, которая потом переходит в самоедство.", 1)]
     },
     {
@@ -279,16 +279,11 @@ def get_question_kb(q_index: int):
     return InlineKeyboardMarkup(inline_keyboard=[buttons])
 
 
+# Теперь эта функция сразу возвращает кнопку-ссылку
 def get_signup_kb(action_type: str):
-    return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="Записаться", callback_data=f"track_{action_type}")]
-    ])
-
-
-def get_real_url_kb(action_type: str):
     url = URL_INTENSIVE if action_type == "intensive" else URL_DIAGNOSTIC
     return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text="Перейти в личные сообщения", url=url)]
+        [InlineKeyboardButton(text="Записаться", url=url)]
     ])
 
 
@@ -320,8 +315,7 @@ async def admin_stats(callback: CallbackQuery):
     async with aiosqlite.connect("bot_database.db") as db:
         async with db.execute("SELECT source, COUNT(*) FROM stats GROUP BY source") as cursor:
             sources = await cursor.fetchall()
-        async with db.execute("SELECT COUNT(*) FROM stats WHERE clicked_signup = 1") as cursor:
-            clicks = await cursor.fetchone()
+        # Подсчет кликов убран, так как используем прямые ссылки
         async with db.execute("""
                               SELECT SUM(CASE WHEN score >= 50 THEN 1 ELSE 0 END),
                                      SUM(CASE WHEN score BETWEEN 36 AND 49 THEN 1 ELSE 0 END),
@@ -336,7 +330,6 @@ async def admin_stats(callback: CallbackQuery):
     for src, count in sources:
         stats_text += f"— {src if src else 'organic'}: {count}\n"
 
-    stats_text += f"\n<b>Нажали 'Записаться':</b> {clicks[0]}\n"
     stats_text += f"\n<b>По категориям:</b>\n— 50-60 баллов: {scores[0] or 0}\n— 36-49 баллов: {scores[1] or 0}\n— 22-35 баллов: {scores[2] or 0}\n— 15-21 балл: {scores[3] or 0}"
 
     await callback.message.edit_text(stats_text, parse_mode="HTML", reply_markup=get_admin_kb())
@@ -368,18 +361,14 @@ async def user_start(message: Message, command: CommandStart, state: FSMContext)
         await db.commit()
 
     await state.update_data(db_source=args)
-    # Отправляем введение с кнопкой
     await message.answer(INTRO_TEXT, reply_markup=get_start_kb(), parse_mode="HTML")
 
 
 @router.callback_query(F.data == "start_questionnaire")
 async def start_questionnaire_handler(callback: CallbackQuery, state: FSMContext):
-    # Убираем кнопку "Начать" из введения
     await callback.message.edit_reply_markup(reply_markup=None)
-
     await state.update_data(score=0, q_index=0)
     await state.set_state(Questionnaire.answering)
-    # Отправляем 1-й вопрос новым сообщением
     await send_question(callback.message, 0, is_callback=False)
     await callback.answer()
 
@@ -395,8 +384,6 @@ async def send_question(message_obj: Message, q_index: int, is_callback=False):
         text += f"{label}) {opt_text}\n"
 
     kb = get_question_kb(q_index)
-
-    # Мы всегда отправляем НОВОЕ сообщение с вопросом
     await message_obj.answer(text, reply_markup=kb, parse_mode="HTML")
 
 
@@ -410,7 +397,6 @@ async def handle_answer(callback: CallbackQuery, state: FSMContext):
     new_score = data['score'] + points
     next_index = curr_index + 1
 
-    # 1. Находим текст ответа, который выбрал пользователь
     q_data = QUESTIONS[curr_index]
     chosen_text = ""
     for label, opt_text, pts in q_data["opts"]:
@@ -418,27 +404,20 @@ async def handle_answer(callback: CallbackQuery, state: FSMContext):
             chosen_text = f"{label}) {opt_text}"
             break
 
-    # 2. Формируем текст для редактирования старого сообщения
     trans = TRANSITIONS[curr_index]
     prefix = f"<i>{trans}</i>\n\n" if trans else ""
     old_text = f"{prefix}<b>{q_data['text']}</b>\n\n"
     for label, opt_text, _ in q_data["opts"]:
         old_text += f"{label}) {opt_text}\n"
 
-    # Дописываем выбор пользователя
     old_text += f"\n✅ <b>Ваш выбор:</b> {chosen_text}"
 
-    # Редактируем старое сообщение (убираем клавиатуру и вставляем выбор)
     await callback.message.edit_text(old_text, reply_markup=None, parse_mode="HTML")
-
-    # Обновляем состояние
     await state.update_data(score=new_score, q_index=next_index)
 
-    # 3. Отправляем следующий вопрос или результат
     if next_index < len(QUESTIONS):
         await send_question(callback.message, next_index, is_callback=False)
     else:
-        # Маршрутизация результатов и кнопок
         if 50 <= new_score <= 60:
             result_text = RESULT_50_60
             action_type = "intensive"
@@ -462,26 +441,11 @@ async def handle_answer(callback: CallbackQuery, state: FSMContext):
             username = f"@{callback.from_user.username}" if callback.from_user.username else callback.from_user.first_name
             await bot.send_message(ADMIN_ID, f"✅ Анкета пройдена: {username}\nБаллы: {new_score}")
 
+        # Отправляем текст с прямой кнопкой-ссылкой
         await callback.message.answer(result_text, reply_markup=get_signup_kb(action_type), parse_mode="HTML")
         await state.clear()
 
     await callback.answer()
-
-
-# Перехватываем тип действия из callback_data (track_intensive или track_diagnostic)
-@router.callback_query(F.data.startswith("track_"))
-async def track_signup(callback: CallbackQuery):
-    action_type = callback.data.split("_")[1]
-
-    async with aiosqlite.connect("bot_database.db") as db:
-        await db.execute(
-            "UPDATE stats SET clicked_signup = 1 WHERE user_id = ? AND id = (SELECT MAX(id) FROM stats WHERE user_id = ?)",
-            (callback.from_user.id, callback.from_user.id))
-        await db.commit()
-
-    # Меняем кнопку на реальный URL
-    await callback.message.edit_reply_markup(reply_markup=get_real_url_kb(action_type))
-    await callback.answer("Нажмите на кнопку ниже для перехода в личные сообщения!", show_alert=True)
 
 
 # --- Запуск ---
