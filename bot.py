@@ -8,6 +8,7 @@ from aiogram.filters import CommandStart
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.utils.deep_linking import create_start_link
+from urllib.parse import quote
 
 load_dotenv()
 BOT_TOKEN = os.getenv("BOT_TOKEN")
@@ -18,9 +19,11 @@ dp = Dispatcher()
 router = Router()
 
 # --- Ссылки (Диплинки) ---
-URL_INTENSIVE = "https://t.me/mariaborodylina?text=Здравствуйте!%20Хочу%20на%20интенсив%20«Связь%20с%20телом»."
-URL_DIAGNOSTIC = "https://t.me/mariaborodylina?text=Здравствуйте!%20Хочу%20на%20бесплатную%20диагностику."
+TEXT_INTENSIVE = "Здравствуйте! Хочу на интенсив «Связь с телом»."
+TEXT_DIAGNOSTIC = "Здравствуйте! Хочу на бесплатную диагностику."
 
+URL_INTENSIVE = f"https://t.me/mariaborodylina?text={quote(TEXT_INTENSIVE)}"
+URL_DIAGNOSTIC = f"https://t.me/mariaborodylina?text={quote(TEXT_DIAGNOSTIC)}"
 # --- Тексты результатов ---
 RESULT_50_60 = (
     "**50 – 60 баллов. Высокая самоценность. «Я у себя есть».**\n\n"
